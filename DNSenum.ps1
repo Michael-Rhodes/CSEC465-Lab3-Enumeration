@@ -12,7 +12,7 @@ foreach ($host in $hosts){
         
         $Host_properties = @{
             Name = $hostinfo.Destination.ToString 
-            IP = $details.IPV4Address.IPAddressToString
+            IP = $hostinfo.IPV4Address.IPAddressToString
         }
         
         New-Object PsObject -Property $host_properties
