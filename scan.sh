@@ -94,23 +94,33 @@ else						# error
 fi
 
 # TODO: Make more efficient. currently takes 1 second per port
+# 		multiple subprocesses that scan, cache results, organize output
 #### scan hosts and ports ####
-portsScanned=0
+portsOpen=0
 hostsScanned=0
 echo "Scanning ports...."
 while read -r host; do	# for each IP address
+	echo $host
 	for port in $ports; do # scan each port
-		exec 2>/dev/null	# redirect error msg (refused connection)
-		timeout 2 echo > /dev/tcp/$host/$port 
-		if (( $? == 0 )); then
-			echo "$host/$port : OPEN"
+		exec 2>/dev/null	# redirect stderr (refused connection)
+		echo > /dev/tcp/$host/$port & 1>/dev/null
+		pid=$!
+		sleep 1
+		kill $pid 1>/dev/null	# kill if still running
+		wait $pid				# capture return value from echo or kill
+		if (( "$?" != 0 )); then
+			echo "    $port : CLOSED"
+		else
+			echo "    $port : OPEN"
+			(( portsOpen++ ))
 		fi
-		$portsScanned=$portsScanned + 1
 	done
+	echo "--> $portsOpen port(s) open"
 	echo
-	$hostsScanned=$hostsScanned + 1
+	portsOpen=0
+	((hostsScanned++))
 done < $IPfile
 
-echo
-#echo "Done: $hostsScanned hosts scanned."
+echo "Done: $hostsScanned host(s) scanned."
+
 
