@@ -10,3 +10,4 @@ FreeBSD	                            64	          65535
 Windows XP	                        128	          65535
 Windows Vista and 7 (Server 2008)	  128	          8192
 iOS 12.4 (Cisco Routers)	          255	          4128
+test-connection select -exp ResponceTimetoLive
