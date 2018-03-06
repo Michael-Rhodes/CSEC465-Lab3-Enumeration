@@ -1,8 +1,14 @@
 #!/bin/bash
 # File: ping.sh
 #
-# Description: 
-
+# Description: takes an IP address range as input and returns
+#              the hosts in IP range that are up
+#
+# Usage:	ping.sh [IP address(es)]
+# Valid ip formats: 
+#		a. Range:	1.1.1.1-1.1.1.233
+#		b. Subnet:	1.1.1.0/24
+#		c. Single host:	1.1.1.1
 
 function usage {
 	cat << EOF
