@@ -1,4 +1,5 @@
 www.cnn.com
 www.reddit.com
 www.myspace.com
-TESTFAKEHOST
+TESTFAKEHOST.fake
+google.com
