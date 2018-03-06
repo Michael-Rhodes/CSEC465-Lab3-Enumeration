@@ -4,7 +4,7 @@
 #
 # Description: Scans a given host or range of hosts for open TCP ports
 #
-# Usage: 	scan.py [host(s)] [port(s)]
+# Usage: 	scan.sh [host(s)] [port(s)]
 #
 # Valid host formats:
 #		1. 1.1.1.1 - Single host
@@ -22,7 +22,7 @@
 ######
 function usage {
 	cat << EOF
-Usage: 	scan.py [host(s)] [port(s)]
+Usage: 	scan.sh [host(s)] [port(s)]
 
 Valid host formats:
 		1. 1.1.1.1 - Single host
