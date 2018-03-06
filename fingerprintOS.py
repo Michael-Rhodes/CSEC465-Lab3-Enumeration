@@ -10,7 +10,7 @@
 #              accurate attempt to fingerprint the OS, other factors should
 #              be considered (e.g. TCP Window Size, TCP ISN, Service banners,
 #              etc.)
-# Usage:       fingerprintOS.py [ip address(es)]
+# Usage:       fingerprintOS.py [file of hosts]
 #
 # Valid IP address formats:
 #		1. 1.1.1.1 - Single host
@@ -23,24 +23,20 @@ from scapy.all import *
 import sys
 import os
 
-# get ip address(es)
-retval = os.system("python3 listIP.py "+sys.argv[1]+" /tmp/tmpIP")
-if (retval != 0):
-  sys.exit(
-"""
-Usage:       fingerprintOS.py [ip address(es)]
-
-Valid IP address formats:
-		1. 1.1.1.1 - Single host
-		2. 1.1.1.1-1.1.255.254 - Host range
-		3. 1.1.1.1/21 - Entire subnet
-""")
+# check if file exists
+if (len(sys.argv) != 2):
+  sys.exit("Usage:	fingerprintOS.py [filename]")
+if (not os.path.isfile(sys.argv[1])):
+  sys.exit("Usage:	fingerprintOS.py [filename]")
 
 # check TTL of each ip address
-with open("/tmp/tmpIP",'r') as addrs:
+with open(sys.argv[1],'r') as addrs:
   for ip in addrs:
     ip = ip.strip('\n')	#remove newline if it exists
-    ans = sr1(IP(dst=ip)/ICMP(),timeout=2,verbose=0) #send ping
+    try:
+      ans = sr1(IP(dst=ip)/ICMP(),timeout=2,verbose=0) #send ping
+    except Exception as e:
+      continue
     if not (ans is None):
        if (ans.ttl <= 64):
          print(ip+": most likely Linux, possibly a newer version of freeBSD")
@@ -48,7 +44,5 @@ with open("/tmp/tmpIP",'r') as addrs:
          print(ip+": most likely Windows")
        else:	# ttl <=255
          print(ip+": most likely freeBSD") 
-    else:
-      print(ip+": DOWN")
 
 
